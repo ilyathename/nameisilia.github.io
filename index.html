@@ -11,6 +11,7 @@
       --bg: #f5f4f0;
       --ink: #111111;
       --muted: #999;
+      --marquee-color: #0077FF;
       --f: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
 
@@ -35,6 +36,42 @@
       position: relative;
     }
 
+    /* ── marquee background ── */
+    .marquee-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee-scroll 45s linear infinite;
+      will-change: transform;
+    }
+
+    .marquee-track span {
+      font-size: 47vh;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--marquee-color);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      padding-right: 0.15em;
+      transition: color 0.4s ease;
+      flex-shrink: 0;
+    }
+
+    @keyframes marquee-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
     /* ── header ── */
     header {
       display: flex;
@@ -52,10 +89,7 @@
       text-decoration: none;
     }
 
-    nav {
-      display: flex;
-      gap: 28px;
-    }
+    nav { display: flex; gap: 28px; }
 
     nav a {
       font-size: 13px;
@@ -65,7 +99,6 @@
       letter-spacing: 0.01em;
       transition: color 0.2s;
     }
-
     nav a:hover { color: var(--muted); }
 
     /* ── floating PNGs ── */
@@ -80,24 +113,13 @@
       position: absolute;
       pointer-events: all;
       cursor: grab;
-      transition: filter 0.2s;
       will-change: transform;
     }
-
     .draggable:active { cursor: grabbing; }
-    .draggable img { display: block; max-width: 100%; height: auto; }
-
-    /* placeholders while user adds their PNGs */
-    .placeholder-shape {
-      position: absolute;
-      border: 1px solid rgba(0,0,0,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .draggable img {
+      display: block;
+      width: 400px;
+      height: auto;
     }
 
     /* ── bio ── */
@@ -121,10 +143,7 @@
       margin-bottom: 20px;
     }
 
-    .bio-links {
-      display: flex;
-      gap: 24px;
-    }
+    .bio-links { display: flex; gap: 24px; }
 
     .bio-links a {
       font-size: 13px;
@@ -133,25 +152,20 @@
       letter-spacing: 0.02em;
       transition: color 0.2s;
     }
-
     .bio-links a:hover { color: var(--muted); }
-
-    /* ── center index number ── */
-    .index-num {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 11px;
-      color: rgba(0,0,0,0.15);
-      letter-spacing: 0.1em;
-      z-index: 1;
-      text-transform: uppercase;
-    }
   </style>
 </head>
 <body>
 <div class="page">
+
+  <!-- ── marquee background ── -->
+  <div class="marquee-bg" id="marqueeBg">
+    <div class="marquee-track" id="marqueeTrack">
+      <!-- text is duplicated for seamless loop -->
+      <span id="t1">ПЛАНЕТАЗЕМЛЯPLANETEARTH地球PLANETATIERRA ग्रहपृथ्वीكوكبالأرضPLANÈTETERREPLANETATERRAপৃথিবীগ্রহPLANETBUMIPLANETERDE행성지구GEZEGENDÜNYAPIANETATERRAHÀNHTINHTRẢIĐẤTகோள்பூமிکرہارضPLANETAZIEMIAดาวเคราะห์โลก&nbsp;</span>
+      <span id="t2">ПЛАНЕТАЗЕМЛЯPLANETEARTH地球PLANETATIERRA ग्रहपृथ्वीكوكبالأرضPLANÈTETERREPLANETATERRAপৃথিবীগ্রহPLANETBUMIPLANETERDE행성지구GEZEGENDÜNYAPIANETATERRAHÀNHTINHTRẢIĐẤTகோள்பூமிکرہارضPLANETAZIEMIAดาวเคราะห์โลก&nbsp;</span>
+    </div>
+  </div>
 
   <header>
     <a href="index.html" class="logo">nameisilia.</a>
@@ -161,30 +175,22 @@
     </nav>
   </header>
 
-  <!-- floating PNG layer — replace the placeholder-shapes with your actual <img> tags -->
+  <!-- floating PNGs -->
   <div class="float-layer" id="floatLayer">
 
-    <!-- PLACEHOLDER 1 — replace with: <img src="your-image-1.png" alt=""> -->
-    <div class="draggable placeholder-shape"
-         style="width:160px;height:200px;top:18%;left:28%;">
-      your png here
+    <div class="draggable" style="top:12%;left:20%;">
+      <img src="podushka.png" alt="">
     </div>
 
-    <!-- PLACEHOLDER 2 — replace with: <img src="your-image-2.png" alt=""> -->
-    <div class="draggable placeholder-shape"
-         style="width:120px;height:120px;top:30%;left:58%;">
-      your png here
+    <div class="draggable" style="top:8%;left:55%;">
+      <img src="tarelka.png" alt="">
     </div>
 
-    <!-- PLACEHOLDER 3 — replace with: <img src="your-image-3.png" alt=""> -->
-    <div class="draggable placeholder-shape"
-         style="width:200px;height:140px;top:52%;left:44%;">
-      your png here
+    <div class="draggable" style="top:42%;left:38%;">
+      <img src="yagnonok.png" alt="">
     </div>
 
   </div>
-
-  <div class="index-num">© nameisilia.</div>
 
   <div class="bio">
     <p class="bio-name">nameisilia.</p>
@@ -201,9 +207,24 @@
 </div>
 
 <script>
-  // make every .draggable element freely movable
+  /* ── color cycle on click ── */
+  const colors = [
+    '#0077FF','#FF2D55','#FF6B00','#00C853',
+    '#AA00FF','#00BCD4','#FFD600','#F50057',
+    '#00E676','#651FFF'
+  ];
+  let colorIdx = 0;
+
+  document.getElementById('marqueeBg').addEventListener('click', () => {
+    colorIdx = (colorIdx + 1) % colors.length;
+    document.querySelectorAll('.marquee-track span').forEach(s => {
+      s.style.color = colors[colorIdx];
+    });
+  });
+
+  /* ── draggable images ── */
   document.querySelectorAll('.draggable').forEach(el => {
-    let isDragging = false, ox = 0, oy = 0, sx = 0, sy = 0;
+    let isDragging = false, ox = 0, oy = 0;
 
     const getMatrix = () => {
       const t = new DOMMatrix(getComputedStyle(el).transform);
@@ -229,7 +250,6 @@
       el.style.zIndex = '';
     });
 
-    // touch support
     el.addEventListener('touchstart', e => {
       const t = e.touches[0];
       const m = getMatrix();
