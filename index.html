@@ -23,7 +23,6 @@
       font-size: 13px;
       line-height: 1.5;
       overflow: hidden;
-      cursor: default;
       user-select: none;
     }
 
@@ -36,7 +35,7 @@
       position: relative;
     }
 
-    /* ── marquee background ── */
+    /* marquee */
     .marquee-bg {
       position: absolute;
       inset: 0;
@@ -72,7 +71,7 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* ── header ── */
+    /* header */
     header {
       display: flex;
       justify-content: space-between;
@@ -82,26 +81,22 @@
     }
 
     .logo {
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 13px; font-weight: 500;
       letter-spacing: -0.01em;
-      color: var(--ink);
-      text-decoration: none;
+      color: var(--ink); text-decoration: none;
     }
 
     nav { display: flex; gap: 28px; }
 
     nav a {
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--ink);
-      text-decoration: none;
+      font-size: 13px; font-weight: 400;
+      color: var(--ink); text-decoration: none;
       letter-spacing: 0.01em;
       transition: color 0.2s;
     }
     nav a:hover { color: var(--muted); }
 
-    /* ── floating PNGs ── */
+    /* floating PNGs */
     .float-layer {
       position: absolute;
       inset: 0;
@@ -116,13 +111,9 @@
       will-change: transform;
     }
     .draggable:active { cursor: grabbing; }
-    .draggable img {
-      display: block;
-      width: 400px;
-      height: auto;
-    }
+    .draggable img { display: block; width: 400px; height: auto; }
 
-    /* ── bio ── */
+    /* bio */
     .bio {
       position: relative;
       z-index: 10;
@@ -130,40 +121,93 @@
     }
 
     .bio-name {
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 14px;
-      letter-spacing: -0.01em;
+      font-size: 13px; font-weight: 500;
+      margin-bottom: 14px; letter-spacing: -0.01em;
     }
 
     .bio-text {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 20px;
+      font-size: 13px; color: var(--muted);
+      line-height: 1.7; margin-bottom: 20px;
     }
 
     .bio-links { display: flex; gap: 24px; }
 
     .bio-links a {
-      font-size: 13px;
-      color: var(--ink);
-      text-decoration: none;
-      letter-spacing: 0.02em;
+      font-size: 13px; color: var(--ink);
+      text-decoration: none; letter-spacing: 0.02em;
       transition: color 0.2s;
     }
     .bio-links a:hover { color: var(--muted); }
+
+    /* modal */
+    @keyframes modalIn {
+      from { opacity:0; transform:translateY(8px) scale(0.98); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    #contactOverlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(245,244,240,0.6);
+      align-items: center;
+      justify-content: center;
+    }
+    #contactOverlay.open { display: flex; }
+
+    #contactBox {
+      background: #f5f4f0;
+      border: 0.5px solid rgba(0,0,0,0.15);
+      padding: 36px 40px 32px;
+      width: 360px;
+      position: relative;
+      animation: modalIn 0.25s cubic-bezier(.22,1,.36,1);
+    }
+
+    #contactClose {
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; cursor: pointer;
+      font-size: 16px; color: #aaa; line-height: 1;
+      font-family: inherit;
+    }
+
+    .email-row {
+      background: #eeede9;
+      border: 0.5px solid rgba(0,0,0,0.1);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .email-row span {
+      font-family: 'Courier New', monospace;
+      font-size: 12px; color: #111;
+      letter-spacing: 0.02em;
+    }
+
+    #copyBtn {
+      background: none;
+      border: 0.5px solid rgba(0,0,0,0.2);
+      font-family: 'Courier New', monospace;
+      font-size: 11px; color: #555;
+      padding: 4px 10px; cursor: pointer;
+      letter-spacing: 0.04em; white-space: nowrap;
+      transition: all 0.15s;
+    }
+    #copyBtn:hover { background: #111; color: #f5f4f0; border-color: #111; }
   </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- ── marquee background ── -->
   <div class="marquee-bg" id="marqueeBg">
-    <div class="marquee-track" id="marqueeTrack">
-      <!-- text is duplicated for seamless loop -->
-      <span id="t1">ПЛАНЕТАЗЕМЛЯPLANETEARTH地球PLANETATIERRA ग्रहपृथ्वीكوكبالأرضPLANÈTETERREPLANETATERRAপৃথিবীগ্রহPLANETBUMIPLANETERDE행성지구GEZEGENDÜNYAPIANETATERRAHÀNHTINHTRẢIĐẤTகோள்பூமிکرہارضPLANETAZIEMIAดาวเคราะห์โลก&nbsp;</span>
-      <span id="t2">ПЛАНЕТАЗЕМЛЯPLANETEARTH地球PLANETATIERRA ग्रहपृथ्वीكوكبالأرضPLANÈTETERREPLANETATERRAপৃথিবীগ্রহPLANETBUMIPLANETERDE행성지구GEZEGENDÜNYAPIANETATERRAHÀNHTINHTRẢIĐẤTகோள்பூமிکرہارضPLANETAZIEMIAดาวเคราะห์โลก&nbsp;</span>
+    <div class="marquee-track">
+      <span>ПЛАНЕТАЗЕМЛЯPLANETEARTH地球PLANETATIERRA ग्रहपृथ्वीكوكبالأرضPLANÈTETERREPLANETATERRAপৃথিবীগ্রহPLANETBUMIPLANETERDE행성지구GEZEGENDÜNYAPIANETATERRAHÀNHTINHTRẢIĐẤTகோள்பூமிکرہارضPLANETAZIEMIAดาวเคราะห์โลก&nbsp;</span>
+      <span>ПЛАНЕТАЗЕМЛЯPLANETEARTH地球PLANETATIERRA ग्रहपृथ्वीكوكبالأرضPLANÈTETERREPLANETATERRAপৃথিবীগ্রহPLANETBUMIPLANETERDE행성지구GEZEGENDÜNYAPIANETATERRAHÀNHTINHTRẢIĐẤTகோள்பூமிکرہارضPLANETAZIEMIAดาวเคราะห์โลก&nbsp;</span>
     </div>
   </div>
 
@@ -175,218 +219,140 @@
     </nav>
   </header>
 
-  <!-- floating PNGs -->
-  <div class="float-layer" id="floatLayer">
-
-    <div class="draggable" style="top:12%;left:20%;">
-      <img src="podushka.png" alt="">
-    </div>
-
-    <div class="draggable" style="top:8%;left:55%;">
-      <img src="tarelka.png" alt="">
-    </div>
-
-    <div class="draggable" style="top:42%;left:38%;">
-      <img src="yagnonok.png" alt="">
-    </div>
-
+  <div class="float-layer">
+    <div class="draggable" data-img="tarelka.png"   style="top:12%;left:20%;"><img src="tarelka.png"   alt=""></div>
+    <div class="draggable" data-img="podushka.png"  style="top:8%;left:55%;"> <img src="podushka.png"  alt=""></div>
+    <div class="draggable" data-img="yagnonok.png"  style="top:42%;left:38%;"><img src="yagnonok.png"  alt=""></div>
   </div>
 
   <div class="bio">
     <p class="bio-name">nameisilia.</p>
-    <p class="bio-text">
-      Creative director and visual artist.<br>
-      Gen Z Official Member.
-    </p>
+    <p class="bio-text">Creative director and visual artist.<br>Gen Z Official Member.</p>
     <div class="bio-links">
       <a href="https://instagram.com/NAMEISILIA" target="_blank">Instagram ↗</a>
-      <a href="mailto:KORCHAGIN.CG@GMAIL.COM">Contact ↗</a>
+      <a href="#" id="contactBio">Contact ↗</a>
     </div>
   </div>
 
 </div>
 
-<script>
-  /* ── color cycle on click ── */
-  const colors = [
-    '#0077FF','#FF2D55','#FF6B00','#00C853',
-    '#AA00FF','#00BCD4','#FFD600','#F50057',
-    '#00E676','#651FFF'
-  ];
-  let colorIdx = 0;
+<!-- contact modal -->
+<div id="contactOverlay">
+  <div id="contactBox">
+    <button id="contactClose">×</button>
+    <div style="font-size:11px;color:#999;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;">Contact</div>
+    <div class="email-row">
+      <span>korchagin.cg@gmail.com</span>
+      <button id="copyBtn">copy</button>
+    </div>
+    <div style="display:flex;justify-content:center;">
+      <canvas id="rabbitCanvas" width="64" height="64"
+        style="cursor:pointer;image-rendering:pixelated;" title="click me"></canvas>
+    </div>
+  </div>
+</div>
 
+<script>
+(function(){
+
+  /* ── marquee color cycle ── */
+  const colors = ['#0077FF','#FF2D55','#FF6B00','#00C853','#AA00FF','#00BCD4','#FFD600','#F50057','#00E676','#651FFF'];
+  let ci = 0;
   document.getElementById('marqueeBg').addEventListener('click', () => {
-    colorIdx = (colorIdx + 1) % colors.length;
-    document.querySelectorAll('.marquee-track span').forEach(s => {
-      s.style.color = colors[colorIdx];
-    });
+    ci = (ci + 1) % colors.length;
+    document.querySelectorAll('.marquee-track span').forEach(s => s.style.color = colors[ci]);
   });
 
-  /* ── draggable images ── */
+  /* ── parallax + drag ── */
+  const depthMap = { 'tarelka.png': 0.010, 'podushka.png': 0.022, 'yagnonok.png': 0.038 };
+  const items = [];
+
   document.querySelectorAll('.draggable').forEach(el => {
-    let isDragging = false, ox = 0, oy = 0;
+    const depth = depthMap[el.dataset.img] || 0.018;
+    items.push({ el, depth, dx: 0, dy: 0, dragging: false });
+  });
 
-    const getMatrix = () => {
-      const t = new DOMMatrix(getComputedStyle(el).transform);
-      return { x: t.m41, y: t.m42 };
-    };
+  let mx = 0, my = 0;
 
-    el.addEventListener('mousedown', e => {
-      isDragging = true;
-      const m = getMatrix();
-      ox = e.clientX - m.x;
-      oy = e.clientY - m.y;
-      el.style.zIndex = 99;
+  function applyTransform(item) {
+    const px = mx * item.depth;
+    const py = my * item.depth;
+    item.el.style.transform = `translate(${item.dx + px}px, ${item.dy + py}px)`;
+  }
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX - window.innerWidth  / 2;
+    my = e.clientY - window.innerHeight / 2;
+    items.forEach(item => { if (!item.dragging) applyTransform(item); });
+  });
+
+  items.forEach(item => {
+    let startDx, startDy, startMx, startMy;
+
+    item.el.addEventListener('mousedown', e => {
+      item.dragging = true;
+      startDx = item.dx; startDy = item.dy;
+      startMx = e.clientX; startMy = e.clientY;
+      item.el.style.zIndex = 99;
       e.preventDefault();
     });
 
     document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      el.style.transform = `translate(${e.clientX - ox}px, ${e.clientY - oy}px)`;
+      if (!item.dragging) return;
+      item.dx = startDx + (e.clientX - startMx);
+      item.dy = startDy + (e.clientY - startMy);
+      applyTransform(item);
     });
 
     document.addEventListener('mouseup', () => {
-      isDragging = false;
-      el.style.zIndex = '';
+      if (!item.dragging) return;
+      item.dragging = false;
+      item.el.style.zIndex = '';
     });
 
-    el.addEventListener('touchstart', e => {
-      const t = e.touches[0];
-      const m = getMatrix();
-      ox = t.clientX - m.x;
-      oy = t.clientY - m.y;
-      isDragging = true;
+    item.el.addEventListener('touchstart', e => {
+      item.dragging = true;
+      startDx = item.dx; startDy = item.dy;
+      startMx = e.touches[0].clientX; startMy = e.touches[0].clientY;
       e.preventDefault();
     }, { passive: false });
 
     document.addEventListener('touchmove', e => {
-      if (!isDragging) return;
-      const t = e.touches[0];
-      el.style.transform = `translate(${t.clientX - ox}px, ${t.clientY - oy}px)`;
+      if (!item.dragging) return;
+      item.dx = startDx + (e.touches[0].clientX - startMx);
+      item.dy = startDy + (e.touches[0].clientY - startMy);
+      item.el.style.transform = `translate(${item.dx}px, ${item.dy}px)`;
     });
 
-    document.addEventListener('touchend', () => { isDragging = false; });
+    document.addEventListener('touchend', () => { item.dragging = false; });
   });
-</script>
 
-<!-- ── Contact Modal ── -->
-<div id="contactOverlay" style="
-  display:none;
-  position:fixed;inset:0;z-index:1000;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  background:rgba(245,244,240,0.6);
-  align-items:center;justify-content:center;
-">
-  <div id="contactBox" style="
-    background:#f5f4f0;
-    border:0.5px solid rgba(0,0,0,0.15);
-    padding:36px 40px 32px;
-    width:360px;
-    position:relative;
-    animation:modalIn 0.25s cubic-bezier(.22,1,.36,1);
-  ">
-    <!-- close -->
-    <button id="contactClose" style="
-      position:absolute;top:16px;right:18px;
-      background:none;border:none;cursor:pointer;
-      font-size:16px;color:#aaa;line-height:1;
-      font-family:inherit;
-    ">×</button>
+  /* ── modal ── */
+  const overlay   = document.getElementById('contactOverlay');
+  const openModal = () => overlay.classList.add('open');
+  const closeModal= () => overlay.classList.remove('open');
 
-    <!-- label -->
-    <div style="font-size:11px;color:#999;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;">
-      Contact
-    </div>
-
-    <!-- email as code line -->
-    <div style="
-      background:#eeede9;
-      border:0.5px solid rgba(0,0,0,0.1);
-      padding:12px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:28px;
-    ">
-      <span style="font-family:'Courier New',monospace;font-size:12px;color:#111;letter-spacing:0.02em;">
-        korchagin.cg@gmail.com
-      </span>
-      <button id="copyBtn" style="
-        background:none;border:0.5px solid rgba(0,0,0,0.2);
-        font-family:'Courier New',monospace;font-size:11px;
-        color:#555;padding:4px 10px;cursor:pointer;
-        letter-spacing:0.04em;white-space:nowrap;
-        transition:all 0.15s;
-      ">copy</button>
-    </div>
-
-    <!-- pixel rabbit -->
-    <div style="display:flex;justify-content:center;">
-      <canvas id="rabbitCanvas" width="64" height="64"
-        style="cursor:pointer;image-rendering:pixelated;"
-        title="click me"></canvas>
-    </div>
-
-  </div>
-</div>
-
-<style>
-  @keyframes modalIn {
-    from { opacity:0; transform:translateY(8px) scale(0.98); }
-    to   { opacity:1; transform:translateY(0) scale(1); }
-  }
-  #copyBtn:hover { background:#111; color:#f5f4f0; border-color:#111; }
-  #contactOverlay.open { display:flex; }
-</style>
-
-<script>
-(function(){
-  /* ── modal open/close ── */
-  const overlay = document.getElementById('contactOverlay');
-  const btn     = document.getElementById('contactBtn');
-  const close   = document.getElementById('contactClose');
-  const copyBtn = document.getElementById('copyBtn');
-
-  btn.addEventListener('click', e => {
-    e.preventDefault();
-    overlay.classList.add('open');
-  });
-  close.addEventListener('click', () => overlay.classList.remove('open'));
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('open');
-  });
+  document.getElementById('contactBtn').addEventListener('click', e => { e.preventDefault(); openModal(); });
+  document.getElementById('contactBio').addEventListener('click', e => { e.preventDefault(); openModal(); });
+  document.getElementById('contactClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
 
   /* ── copy email ── */
-  copyBtn.addEventListener('click', () => {
+  document.getElementById('copyBtn').addEventListener('click', () => {
     navigator.clipboard.writeText('korchagin.cg@gmail.com').then(() => {
-      copyBtn.textContent = 'copied!';
-      setTimeout(() => { copyBtn.textContent = 'copy'; }, 1800);
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'copied!';
+      setTimeout(() => { btn.textContent = 'copy'; }, 1800);
     });
   });
 
   /* ── pixel rabbit ── */
   const C = document.getElementById('rabbitCanvas');
   const ctx = C.getContext('2d');
-  const S = 4; // pixel size
+  const S = 4;
+  const _ = null, B = '#0077FF', D = '#0055CC', W = '#ffffff',
+        K = '#111111', P = '#ffaacc', R = '#ff3333', G = '#555555';
 
-  // palette
-  const _ = null;          // transparent
-  const B = '#0077FF';     // blue body
-  const D = '#0055CC';     // dark blue
-  const W = '#ffffff';     // white
-  const K = '#111111';     // black
-  const P = '#ffaacc';     // pink inner ear
-  const R = '#ff3333';     // red (devil)
-  const Y = '#ffdd00';     // yellow
-  const G = '#555555';     // grey glasses
-
-  // states: smile | devil | cute | pro
-  const states = ['smile','devil','cute','pro'];
-  let si = 0;
-
-  // rabbit frames — 16×16 pixel grid
   const frames = {
     smile: [
       [_,_,B,B,_,_,_,_,_,_,_,_,B,B,_,_],
@@ -462,10 +428,12 @@
     ],
   };
 
+  const states = ['smile','devil','cute','pro'];
+  let si = 0;
+
   function drawRabbit(state) {
     ctx.clearRect(0, 0, 64, 64);
-    const grid = frames[state];
-    grid.forEach((row, y) => {
+    frames[state].forEach((row, y) => {
       row.forEach((color, x) => {
         if (!color) return;
         ctx.fillStyle = color;
@@ -475,14 +443,9 @@
   }
 
   drawRabbit(states[si]);
-
-  C.addEventListener('click', () => {
-    si = (si + 1) % states.length;
-    drawRabbit(states[si]);
-  });
+  C.addEventListener('click', () => { si = (si + 1) % states.length; drawRabbit(states[si]); });
 
 })();
 </script>
-
 </body>
 </html>
