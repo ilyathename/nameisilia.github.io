@@ -3,482 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOULID — nameisilia.</title>
+  <title>Works — nameisilia.</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --bg: #f5f4f0;
+      --ink: #111111;
+      --muted: #999;
+      --f: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
     html, body {
-      width: 100%; height: 100%;
-      background: #000;
-      overflow: hidden;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #fff;
+      width: 100%; min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--f);
+      font-size: 13px;
+      line-height: 1.5;
     }
 
-    #canvas-container {
-      width: 100vw;
-      height: 100vh;
-      position: fixed;
-      inset: 0;
+    .page {
+      padding: 30px 36px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    #canvas-container canvas {
-      display: block;
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    /* ── UI overlay ── */
-    .ui {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* top bar */
-    .top-bar {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      padding: 28px 36px;
+    header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      pointer-events: all;
+      margin-bottom: 80px;
     }
 
-    .back-link {
-      font-size: 13px;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
+    .logo {
+      font-size: 13px; font-weight: 500;
+      color: var(--ink); text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    nav { display: flex; gap: 28px; }
+
+    nav a {
+      font-size: 13px; font-weight: 400;
+      color: var(--ink); text-decoration: none;
       letter-spacing: 0.01em;
       transition: color 0.2s;
     }
+    nav a:hover { color: var(--muted); }
+    nav a.active { color: var(--muted); }
 
-    .back-link:hover { color: #fff; }
-
-    .project-label {
-      font-size: 13px;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    /* bottom bar */
-    .bottom-bar {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 28px 36px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-
-    .hint {
-      font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: opacity 1s;
-    }
-
-    .hint.hidden { opacity: 0; }
-
-    .track-info {
-      font-size: 11px;
-      color: rgba(255,255,255,0.25);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-align: right;
-    }
-
-    /* ── start screen ── */
-    #start-screen {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      cursor: pointer;
-      transition: opacity 0.8s;
-    }
-
-    #start-screen.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .start-title {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .start-sub {
-      font-size: 11px;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .start-dot {
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: #fff;
-      margin: 0 auto 32px;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.5); }
-    }
-
-    /* loading */
-    #loading {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    #loading.hidden { display: none; }
-
-    /* ── progress bar ── */
-    .progress-wrap {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      padding: 0 36px;
-      gap: 16px;
-      pointer-events: all;
-      cursor: pointer;
-    }
-
-    .progress-track {
+    /* ── project list ── */
+    .project-list {
       flex: 1;
-      height: 1px;
-      background: rgba(255,255,255,0.15);
-      position: relative;
+    }
+
+    .project-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-top: 0.5px solid rgba(0,0,0,0.15);
+      text-decoration: none;
+      color: var(--ink);
       cursor: pointer;
-    }
-
-    .progress-track:hover { background: rgba(255,255,255,0.25); }
-
-    .progress-fill {
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 0%;
-      background: rgba(255,255,255,0.8);
-      pointer-events: none;
-      transition: width 0.25s linear;
-    }
-
-    .progress-handle {
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: #fff;
-      pointer-events: none;
-      opacity: 0;
       transition: opacity 0.2s;
     }
 
-    .progress-track:hover .progress-handle { opacity: 1; }
+    .project-row:hover { opacity: 0.5; }
 
-    .progress-time {
+    .project-row:last-child { border-bottom: 0.5px solid rgba(0,0,0,0.15); }
+
+    .project-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 40px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .project-year { min-width: 40px; text-align: right; }
+    .project-type { min-width: 120px; text-align: right; }
+    .project-arrow { color: var(--ink); }
+
+    /* ── footer ── */
+    footer {
+      margin-top: 80px;
+      padding-top: 20px;
+      border-top: 0.5px solid rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
       font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 0.06em;
-      white-space: nowrap;
-      min-width: 72px;
-      text-align: right;
+      color: var(--muted);
+      letter-spacing: 0.04em;
     }
   </style>
 </head>
 <body>
+<div class="page">
 
-<!-- Loading -->
-<div id="loading">Loading</div>
+  <header>
+    <a href="index.html" class="logo">nameisilia.</a>
+    <nav>
+      <a href="works.html" class="active">Works</a>
+      <a href="mailto:YOUR@EMAIL.COM">Contact</a>
+    </nav>
+  </header>
 
-<!-- Start screen -->
-<div id="start-screen" class="hidden">
-  <div class="start-dot"></div>
-  <div class="start-title">SOULID</div>
-  <div class="start-sub">Click to enter</div>
+  <div class="project-list">
+
+    <a href="soulid.html" class="project-row">
+      <span class="project-title">SOULID</span>
+      <span class="project-meta">
+        <span class="project-type">Video / Installation</span>
+        <span class="project-year">2025</span>
+        <span class="project-arrow">↗</span>
+      </span>
+    </a>
+
+    <!-- add more projects here following the same pattern -->
+
+  </div>
+
+  <footer>
+    <span>nameisilia.</span>
+    <span>© 2025</span>
+  </footer>
+
 </div>
-
-<!-- Three.js canvas -->
-<div id="canvas-container"></div>
-
-<!-- UI -->
-<div class="ui">
-  <div class="top-bar">
-    <a href="works.html" class="back-link">← Works</a>
-    <span class="project-label">SOULID — nameisilia.</span>
-  </div>
-  <div class="bottom-bar" style="padding-bottom:48px;">
-    <span class="hint" id="hint">Drag to look around</span>
-  </div>
-
-  <!-- progress bar -->
-  <div class="progress-wrap" id="progressWrap">
-    <div class="progress-track" id="progressTrack">
-      <div class="progress-fill" id="progressFill"></div>
-      <div class="progress-handle" id="progressHandle"></div>
-    </div>
-    <span class="progress-time" id="progressTime">—</span>
-  </div>
-</div>
-
-<!--
-  ╔══════════════════════════════════════════════════════════╗
-  ║  HOW TO ADD YOUR VIDEO AND AUDIO                         ║
-  ║                                                          ║
-  ║  1. Put your merged video file in this folder.          ║
-  ║     Name it exactly:  soulid-video.mp4                  ║
-  ║                                                          ║
-  ║  2. Put your music track in this folder.                ║
-  ║     Name it exactly:  soulid-audio.mp3                  ║
-  ║     (also supports .ogg, .wav)                          ║
-  ║                                                          ║
-  ║  3. Open soulid.html in your browser. Done.             ║
-  ╚══════════════════════════════════════════════════════════╝
--->
-<video id="vid" loop crossorigin="anonymous"
-       style="display:none" playsinline muted>
-  <source src="soulid-video.mp4" type="video/mp4">
-</video>
-
-<audio id="aud" loop>
-  <source src="soulid-audio.mp3" type="audio/mpeg">
-  <source src="soulid-audio.ogg" type="audio/ogg">
-</audio>
-
-<!-- Three.js r128 from CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-<script>
-(function() {
-
-  /* ── elements ── */
-  const container      = document.getElementById('canvas-container');
-  const startEl        = document.getElementById('start-screen');
-  const loadingEl      = document.getElementById('loading');
-  const hintEl         = document.getElementById('hint');
-  const video          = document.getElementById('vid');
-  const audio          = document.getElementById('aud');
-  const progressTrack  = document.getElementById('progressTrack');
-  const progressFill   = document.getElementById('progressFill');
-  const progressHandle = document.getElementById('progressHandle');
-  const progressTime   = document.getElementById('progressTime');
-
-  /* ── progress bar ── */
-  const fmt = s => {
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return m + ':' + String(sec).padStart(2, '0');
-  };
-
-  video.addEventListener('timeupdate', () => {
-    if (!video.duration) return;
-    const pct = (video.currentTime / video.duration) * 100;
-    progressFill.style.width = pct + '%';
-    progressHandle.style.left = pct + '%';
-    progressTime.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
-  });
-
-  let isScrubbing = false;
-
-  const seekTo = e => {
-    const rect = progressTrack.getBoundingClientRect();
-    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-    const pct = x / rect.width;
-    if (video.duration) video.currentTime = pct * video.duration;
-  };
-
-  progressTrack.addEventListener('mousedown', e => {
-    isScrubbing = true;
-    seekTo(e);
-    e.stopPropagation();
-  });
-
-  document.addEventListener('mousemove', e => {
-    if (isScrubbing) seekTo(e);
-  });
-
-  document.addEventListener('mouseup', () => { isScrubbing = false; });
-
-  progressTrack.addEventListener('touchstart', e => {
-    isScrubbing = true;
-    seekTo(e.touches[0]);
-    e.stopPropagation();
-  }, { passive: true });
-
-  document.addEventListener('touchmove', e => {
-    if (isScrubbing) seekTo(e.touches[0]);
-  });
-
-  document.addEventListener('touchend', () => { isScrubbing = false; });
-
-  /* ── Three.js setup ── */
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  container.appendChild(renderer.domElement);
-
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-  camera.position.set(0, 0, 0.001);
-
-  /* ── sphere (inside-out) ── */
-  const geo = new THREE.SphereGeometry(500, 60, 40);
-  geo.scale(-1, 1, 1); // flip normals → see from inside
-
-  const texture  = new THREE.VideoTexture(video);
-  texture.minFilter = THREE.LinearFilter;
-  texture.magFilter = THREE.LinearFilter;
-  texture.format    = THREE.RGBFormat;
-
-  const mat    = new THREE.MeshBasicMaterial({ map: texture });
-  const sphere = new THREE.Mesh(geo, mat);
-  scene.add(sphere);
-
-  /* ── camera rotation state ── */
-  let isDragging = false;
-  let prevMouse  = { x: 0, y: 0 };
-  let lon = 0, lat = 0; // degrees
-
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-  const toRad = d => d * Math.PI / 180;
-
-  function updateCamera() {
-    lat = clamp(lat, -85, 85);
-    const phi   = toRad(90 - lat);
-    const theta = toRad(lon);
-    camera.lookAt(
-      500 * Math.sin(phi) * Math.cos(theta),
-      500 * Math.cos(phi),
-      500 * Math.sin(phi) * Math.sin(theta)
-    );
-  }
-
-  /* ── mouse drag ── */
-  renderer.domElement.addEventListener('mousedown', e => {
-    isDragging = true;
-    prevMouse.x = e.clientX;
-    prevMouse.y = e.clientY;
-    renderer.domElement.style.cursor = 'grabbing';
-    // hide hint once user interacts
-    hintEl.classList.add('hidden');
-  });
-
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    renderer.domElement.style.cursor = 'grab';
-  });
-
-  document.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    const dx = e.clientX - prevMouse.x;
-    const dy = e.clientY - prevMouse.y;
-    lon -= dx * 0.15;
-    lat += dy * 0.15;
-    prevMouse.x = e.clientX;
-    prevMouse.y = e.clientY;
-  });
-
-  /* ── touch drag ── */
-  renderer.domElement.addEventListener('touchstart', e => {
-    isDragging = true;
-    prevMouse.x = e.touches[0].clientX;
-    prevMouse.y = e.touches[0].clientY;
-    hintEl.classList.add('hidden');
-    e.preventDefault();
-  }, { passive: false });
-
-  document.addEventListener('touchend', () => { isDragging = false; });
-
-  document.addEventListener('touchmove', e => {
-    if (!isDragging) return;
-    const dx = e.touches[0].clientX - prevMouse.x;
-    const dy = e.touches[0].clientY - prevMouse.y;
-    lon -= dx * 0.2;
-    lat += dy * 0.2;
-    prevMouse.x = e.touches[0].clientX;
-    prevMouse.y = e.touches[0].clientY;
-  });
-
-  /* ── resize ── */
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  /* ── render loop ── */
-  function animate() {
-    requestAnimationFrame(animate);
-    if (video.readyState >= video.HAVE_ENOUGH_DATA) {
-      texture.needsUpdate = true;
-    }
-    updateCamera();
-    renderer.render(scene, camera);
-  }
-
-  /* ── start flow ── */
-  renderer.domElement.style.cursor = 'grab';
-
-  video.addEventListener('canplaythrough', () => {
-    loadingEl.classList.add('hidden');
-    startEl.classList.remove('hidden');
-  }, { once: true });
-
-  // if video doesn't load (no file yet), still show start after 1s
-  setTimeout(() => {
-    loadingEl.classList.add('hidden');
-    startEl.classList.remove('hidden');
-  }, 1200);
-
-  startEl.addEventListener('click', () => {
-    startEl.classList.add('fade-out');
-    setTimeout(() => { startEl.style.display = 'none'; }, 900);
-
-    // start video and audio together
-    video.muted = false;
-    video.play().catch(() => {
-      // if autoplay blocked, try muted first
-      video.muted = true;
-      video.play();
-    });
-
-    audio.volume = 0.9;
-    audio.play().catch(() => {});
-
-    animate();
-  });
-
-  // begin loading (no autoplay yet)
-  video.load();
-  animate(); // render static scene while loading
-
-})();
-</script>
 </body>
 </html>
