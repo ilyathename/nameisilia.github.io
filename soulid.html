@@ -155,6 +155,63 @@
     }
 
     #loading.hidden { display: none; }
+
+    /* ── progress bar ── */
+    .progress-wrap {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 36px;
+      gap: 20px;
+      pointer-events: all;
+      background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 2px;
+      background: rgba(255,255,255,0.25);
+      position: relative;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .progress-track:hover { background: rgba(255,255,255,0.4); }
+
+    .progress-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 0%;
+      background: #ffffff;
+      pointer-events: none;
+      border-radius: 2px;
+      transition: width 0.25s linear;
+    }
+
+    .progress-handle {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .progress-track:hover .progress-handle { opacity: 1; }
+
+    .progress-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      min-width: 80px;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
@@ -178,9 +235,17 @@
     <a href="works.html" class="back-link">← Works</a>
     <span class="project-label">SOULID — nameisilia.</span>
   </div>
-  <div class="bottom-bar">
+  <div class="bottom-bar" style="padding-bottom:48px;">
     <span class="hint" id="hint">Drag to look around</span>
-    <span class="track-info" id="track-info"></span>
+  </div>
+
+  <!-- progress bar -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-track" id="progressTrack">
+      <div class="progress-fill" id="progressFill"></div>
+      <div class="progress-handle" id="progressHandle"></div>
+    </div>
+    <span class="progress-time" id="progressTime">—</span>
   </div>
 </div>
 
@@ -203,6 +268,11 @@
   <source src="soulid-video.mp4" type="video/mp4">
 </video>
 
+<audio id="aud" loop>
+  <source src="soulid-audio.mp3" type="audio/mpeg">
+  <source src="soulid-audio.ogg" type="audio/ogg">
+</audio>
+
 <!-- Three.js r128 from CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -210,11 +280,64 @@
 (function() {
 
   /* ── elements ── */
-  const container  = document.getElementById('canvas-container');
-  const startEl    = document.getElementById('start-screen');
-  const loadingEl  = document.getElementById('loading');
-  const hintEl     = document.getElementById('hint');
-  const video      = document.getElementById('vid');
+  const container      = document.getElementById('canvas-container');
+  const startEl        = document.getElementById('start-screen');
+  const loadingEl      = document.getElementById('loading');
+  const hintEl         = document.getElementById('hint');
+  const video          = document.getElementById('vid');
+  const audio          = document.getElementById('aud');
+  const progressTrack  = document.getElementById('progressTrack');
+  const progressFill   = document.getElementById('progressFill');
+  const progressHandle = document.getElementById('progressHandle');
+  const progressTime   = document.getElementById('progressTime');
+
+  /* ── progress bar ── */
+  const fmt = s => {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2, '0');
+  };
+
+  video.addEventListener('timeupdate', () => {
+    if (!video.duration) return;
+    const pct = (video.currentTime / video.duration) * 100;
+    progressFill.style.width = pct + '%';
+    progressHandle.style.left = pct + '%';
+    progressTime.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
+  });
+
+  let isScrubbing = false;
+
+  const seekTo = e => {
+    const rect = progressTrack.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const pct = x / rect.width;
+    if (video.duration) video.currentTime = pct * video.duration;
+  };
+
+  progressTrack.addEventListener('mousedown', e => {
+    isScrubbing = true;
+    seekTo(e);
+    e.stopPropagation();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (isScrubbing) seekTo(e);
+  });
+
+  document.addEventListener('mouseup', () => { isScrubbing = false; });
+
+  progressTrack.addEventListener('touchstart', e => {
+    isScrubbing = true;
+    seekTo(e.touches[0]);
+    e.stopPropagation();
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (isScrubbing) seekTo(e.touches[0]);
+  });
+
+  document.addEventListener('touchend', () => { isScrubbing = false; });
 
   /* ── Three.js setup ── */
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -346,6 +469,9 @@
       video.muted = true;
       video.play();
     });
+
+    audio.volume = 0.9;
+    audio.play().catch(() => {});
 
     animate();
   });
