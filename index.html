@@ -171,7 +171,7 @@
     <a href="index.html" class="logo">nameisilia.</a>
     <nav>
       <a href="works.html">Works</a>
-      <a href="mailto:KORCHAGIN.CG@GMAIL.COM">Contact</a>
+      <a href="#" id="contactBtn">Contact</a>
     </nav>
   </header>
 
@@ -268,5 +268,221 @@
     document.addEventListener('touchend', () => { isDragging = false; });
   });
 </script>
+
+<!-- ── Contact Modal ── -->
+<div id="contactOverlay" style="
+  display:none;
+  position:fixed;inset:0;z-index:1000;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  background:rgba(245,244,240,0.6);
+  align-items:center;justify-content:center;
+">
+  <div id="contactBox" style="
+    background:#f5f4f0;
+    border:0.5px solid rgba(0,0,0,0.15);
+    padding:36px 40px 32px;
+    width:360px;
+    position:relative;
+    animation:modalIn 0.25s cubic-bezier(.22,1,.36,1);
+  ">
+    <!-- close -->
+    <button id="contactClose" style="
+      position:absolute;top:16px;right:18px;
+      background:none;border:none;cursor:pointer;
+      font-size:16px;color:#aaa;line-height:1;
+      font-family:inherit;
+    ">×</button>
+
+    <!-- label -->
+    <div style="font-size:11px;color:#999;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;">
+      Contact
+    </div>
+
+    <!-- email as code line -->
+    <div style="
+      background:#eeede9;
+      border:0.5px solid rgba(0,0,0,0.1);
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:28px;
+    ">
+      <span style="font-family:'Courier New',monospace;font-size:12px;color:#111;letter-spacing:0.02em;">
+        korchagin.cg@gmail.com
+      </span>
+      <button id="copyBtn" style="
+        background:none;border:0.5px solid rgba(0,0,0,0.2);
+        font-family:'Courier New',monospace;font-size:11px;
+        color:#555;padding:4px 10px;cursor:pointer;
+        letter-spacing:0.04em;white-space:nowrap;
+        transition:all 0.15s;
+      ">copy</button>
+    </div>
+
+    <!-- pixel rabbit -->
+    <div style="display:flex;justify-content:center;">
+      <canvas id="rabbitCanvas" width="64" height="64"
+        style="cursor:pointer;image-rendering:pixelated;"
+        title="click me"></canvas>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @keyframes modalIn {
+    from { opacity:0; transform:translateY(8px) scale(0.98); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+  #copyBtn:hover { background:#111; color:#f5f4f0; border-color:#111; }
+  #contactOverlay.open { display:flex; }
+</style>
+
+<script>
+(function(){
+  /* ── modal open/close ── */
+  const overlay = document.getElementById('contactOverlay');
+  const btn     = document.getElementById('contactBtn');
+  const close   = document.getElementById('contactClose');
+  const copyBtn = document.getElementById('copyBtn');
+
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    overlay.classList.add('open');
+  });
+  close.addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+
+  /* ── copy email ── */
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText('korchagin.cg@gmail.com').then(() => {
+      copyBtn.textContent = 'copied!';
+      setTimeout(() => { copyBtn.textContent = 'copy'; }, 1800);
+    });
+  });
+
+  /* ── pixel rabbit ── */
+  const C = document.getElementById('rabbitCanvas');
+  const ctx = C.getContext('2d');
+  const S = 4; // pixel size
+
+  // palette
+  const _ = null;          // transparent
+  const B = '#0077FF';     // blue body
+  const D = '#0055CC';     // dark blue
+  const W = '#ffffff';     // white
+  const K = '#111111';     // black
+  const P = '#ffaacc';     // pink inner ear
+  const R = '#ff3333';     // red (devil)
+  const Y = '#ffdd00';     // yellow
+  const G = '#555555';     // grey glasses
+
+  // states: smile | devil | cute | pro
+  const states = ['smile','devil','cute','pro'];
+  let si = 0;
+
+  // rabbit frames — 16×16 pixel grid
+  const frames = {
+    smile: [
+      [_,_,B,B,_,_,_,_,_,_,_,_,B,B,_,_],
+      [_,B,P,B,B,_,_,_,_,_,_,B,B,P,B,_],
+      [_,B,P,B,B,_,_,_,_,_,_,B,B,P,B,_],
+      [_,B,B,B,B,_,_,_,_,_,_,B,B,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,D,D,B,B,B,B,B,B,D,D,B,B,_],
+      [_,B,B,D,D,B,B,B,B,B,B,D,D,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,K,B,B,B,B,B,B,K,B,B,B,_],
+      [_,B,B,B,B,K,B,B,B,B,K,B,B,B,B,_],
+      [_,B,B,B,B,B,K,K,K,K,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,_,_,B,B,B,B,B,B,B,B,B,B,_,_,_],
+    ],
+    devil: [
+      [R,R,_,B,B,_,_,_,_,_,_,B,B,_,R,R],
+      [_,R,B,P,B,B,_,_,_,_,B,B,P,B,R,_],
+      [_,B,P,B,B,_,_,_,_,_,_,B,B,P,B,_],
+      [_,B,B,B,B,_,_,_,_,_,_,B,B,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,R,R,B,B,B,B,B,B,R,R,B,B,_],
+      [_,B,B,R,R,B,B,B,B,B,B,R,R,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,K,B,B,B,B,B,B,B,B,K,B,B,_],
+      [_,B,B,B,K,K,K,K,K,K,K,K,B,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,_,_,B,B,B,B,B,B,B,B,B,B,_,_,_],
+    ],
+    cute: [
+      [_,_,B,B,_,_,_,_,_,_,_,_,B,B,_,_],
+      [_,B,P,B,B,_,_,_,_,_,_,B,B,P,B,_],
+      [_,B,P,B,B,_,_,_,_,_,_,B,B,P,B,_],
+      [_,B,B,B,B,_,_,_,_,_,_,B,B,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,R,R,B,B,B,B,B,B,R,R,B,B,_],
+      [_,B,R,W,R,R,B,B,B,B,R,R,W,R,B,_],
+      [_,B,B,R,R,B,B,B,B,B,B,R,R,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,K,K,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,P,B,B,B,B,B,B,B,B,P,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,_,_,B,B,B,B,B,B,B,B,B,B,_,_,_],
+    ],
+    pro: [
+      [_,_,B,B,_,_,_,_,_,_,_,_,B,B,_,_],
+      [_,B,P,B,B,_,_,_,_,_,_,B,B,P,B,_],
+      [_,B,P,B,B,_,_,_,_,_,_,B,B,P,B,_],
+      [_,B,B,B,B,_,_,_,_,_,_,B,B,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,K,K,K,K,B,B,B,B,K,K,K,K,B,_],
+      [_,B,K,G,G,K,B,B,B,B,K,G,G,K,B,_],
+      [_,B,K,K,K,K,K,K,K,K,K,K,K,K,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,B,B,B,B,B,K,K,K,K,B,B,B,B,B,_],
+      [_,B,B,B,B,B,B,B,B,B,B,B,B,B,B,_],
+      [_,_,B,B,B,B,B,B,B,B,B,B,B,B,_,_],
+      [_,_,_,B,B,B,B,B,B,B,B,B,B,_,_,_],
+    ],
+  };
+
+  function drawRabbit(state) {
+    ctx.clearRect(0, 0, 64, 64);
+    const grid = frames[state];
+    grid.forEach((row, y) => {
+      row.forEach((color, x) => {
+        if (!color) return;
+        ctx.fillStyle = color;
+        ctx.fillRect(x * S, y * S, S, S);
+      });
+    });
+  }
+
+  drawRabbit(states[si]);
+
+  C.addEventListener('click', () => {
+    si = (si + 1) % states.length;
+    drawRabbit(states[si]);
+  });
+
+})();
+</script>
+
 </body>
 </html>
