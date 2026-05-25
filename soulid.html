@@ -203,11 +203,6 @@
   <source src="soulid-video.mp4" type="video/mp4">
 </video>
 
-<audio id="aud" loop>
-  <source src="soulid-audio.mp3" type="audio/mpeg">
-  <source src="soulid-audio.ogg" type="audio/ogg">
-</audio>
-
 <!-- Three.js r128 from CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -220,7 +215,6 @@
   const loadingEl  = document.getElementById('loading');
   const hintEl     = document.getElementById('hint');
   const video      = document.getElementById('vid');
-  const audio      = document.getElementById('aud');
 
   /* ── Three.js setup ── */
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -352,9 +346,6 @@
       video.muted = true;
       video.play();
     });
-
-    audio.volume = 0.9;
-    audio.play().catch(() => {});
 
     animate();
   });
