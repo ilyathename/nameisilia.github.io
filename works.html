@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — nameisilia.</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f5f4f0;
+      --ink: #111111;
+      --muted: #999;
+      --f: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    html, body {
+      width: 100%; min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--f);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .page {
+      padding: 30px 36px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 80px;
+    }
+
+    .logo {
+      font-size: 13px; font-weight: 500;
+      color: var(--ink); text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    nav { display: flex; gap: 28px; }
+
+    nav a {
+      font-size: 13px; font-weight: 400;
+      color: var(--ink); text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--muted); }
+    nav a.active { color: var(--muted); }
+
+    /* ── project list ── */
+    .project-list {
+      flex: 1;
+    }
+
+    .project-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-top: 0.5px solid rgba(0,0,0,0.15);
+      text-decoration: none;
+      color: var(--ink);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .project-row:hover { opacity: 0.5; }
+
+    .project-row:last-child { border-bottom: 0.5px solid rgba(0,0,0,0.15); }
+
+    .project-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 40px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .project-year { min-width: 40px; text-align: right; }
+    .project-type { min-width: 120px; text-align: right; }
+    .project-arrow { color: var(--ink); }
+
+    /* ── footer ── */
+    footer {
+      margin-top: 80px;
+      padding-top: 20px;
+      border-top: 0.5px solid rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <a href="index.html" class="logo">nameisilia.</a>
+    <nav>
+      <a href="works.html" class="active">Works</a>
+      <a href="mailto:YOUR@EMAIL.COM">Contact</a>
+    </nav>
+  </header>
+
+  <div class="project-list">
+
+    <a href="soulid.html" class="project-row">
+      <span class="project-title">SOULID</span>
+      <span class="project-meta">
+        <span class="project-type">Video / Installation</span>
+        <span class="project-year">2025</span>
+        <span class="project-arrow">↗</span>
+      </span>
+    </a>
+
+    <!-- add more projects here following the same pattern -->
+
+  </div>
+
+  <footer>
+    <span>nameisilia.</span>
+    <span>© 2025</span>
+  </footer>
+
+</div>
+</body>
+</html>
